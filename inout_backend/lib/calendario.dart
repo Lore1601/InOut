@@ -5,7 +5,8 @@ class Calendario {
   final Map<DateTime, PortafoglioGiornata> _giornate = {};
 
   // getters
-  Map<DateTime, PortafoglioGiornata> get giornate => _giornate;
+  Map<DateTime, PortafoglioGiornata> get giornate =>
+      Map.unmodifiable(_giornate);
 
   // metodi
   void inserisciPortafoglioGiornata(DateTime data) {
@@ -26,6 +27,7 @@ class Calendario {
     return _giornate[dataNormalizzata]!;
   }
 
+  // fuzioni che operano su base mensile
   double getTotaleEntrateMese(int anno, int mese) {
     double totEntrate = 0;
 
@@ -38,7 +40,7 @@ class Calendario {
     return totEntrate;
   }
 
-  double getTotaleUscite(int anno, int mese) {
+  double getTotaleUsciteMese(int anno, int mese) {
     double totUscite = 0;
 
     _giornate.forEach((data, portafoglio) {
@@ -51,6 +53,40 @@ class Calendario {
   }
 
   double getSaldoMese(int anno, int mese) {
-    return getTotaleEntrateMese(anno, mese) - getTotaleUscite(anno, mese);
+    return getTotaleEntrateMese(anno, mese) - getTotaleUsciteMese(anno, mese);
+  }
+
+  // funzioni che operano su base annuale
+  double getTotaleEntrateAnno(int anno) {
+    double totEntrate = 0;
+
+    _giornate.forEach((data, portafoglio) {
+      if (data.year == anno) {
+        totEntrate += portafoglio.getTotaleEntrate();
+      }
+    });
+
+    return totEntrate;
+  }
+
+  double getTotaleUsciteAnno(int anno) {
+    double totUscite = 0;
+
+    _giornate.forEach((data, portafoglio) {
+      if (data.year == anno) {
+        totUscite += portafoglio.getTotaleUscite();
+      }
+    });
+
+    return totUscite;
+  }
+
+  double getSaldoAnno(int anno) {
+    return getTotaleEntrateAnno(anno) - getTotaleUsciteAnno(anno);
+  }
+
+  // funzioni per la rimozione di PortafoglioGiornata
+  void rimuoviPortafoglioGiornata(DateTime data) {
+    _giornate.remove(DateTime(data.year, data.month, data.day));
   }
 }
