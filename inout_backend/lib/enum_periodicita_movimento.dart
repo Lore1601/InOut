@@ -1,0 +1,1 @@
+enum PeriodicitaMovimento {periodico , nonPeriodico}
